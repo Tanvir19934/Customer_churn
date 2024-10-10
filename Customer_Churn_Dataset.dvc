@@ -1,0 +1,6 @@
+outs:
+- md5: be9a6b7bf8115f600d06380b55a441ed.dir
+  size: 27311962
+  nfiles: 4
+  hash: md5
+  path: Customer_Churn_Dataset
