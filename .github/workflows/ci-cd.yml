@@ -1,0 +1,43 @@
+name: CI/CD for ML
+
+on: [push]
+
+
+jobs:
+  test-train-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+
+      - name: Train Model
+        run: |
+          python Customer_churn.py
+
+      # Save the model performance and images as markdown in a report
+      - name: Generate Report
+        run: |
+          echo "## Model metrics" > report.md
+          cat model_performance.txt >> report.md
+          echo "## Feature Importance" >> report.md
+          echo "![](pooled_roc_curve.png)" >> report.md
+      # Commit and push the generated report and images to the repo
+      - name: Commit and Push Results
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add report.md
+          git commit -m "Add model performance report"
+          git push
