@@ -19,4 +19,8 @@ six
 tenacity
 threadpoolctl
 tzdata
+<<<<<<< HEAD
 xgboost
+=======
+xgboost
+>>>>>>> 358df430198a5cc0e7385934396fc93faf01274e
