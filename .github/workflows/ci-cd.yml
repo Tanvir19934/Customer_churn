@@ -33,12 +33,20 @@ jobs:
           cat model_performance.txt >> report.md
           echo "## Feature Importance" >> report.md
           echo "![](pooled_roc_curve.png)" >> report.md
+      
       # Commit and push the generated report and images to the repo
-      - name: Commit and Push Results
+
+      - name: Configure Git
         run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
-          git add report.md
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit and Push changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git add .
           git commit -m "Add model performance report"
-          git push https://$GITHUB_ACTOR:${{secrets.GH_TOKEN}}@github.com/Tanvir19934/Customer_churn
+          git push origin main
+
           
