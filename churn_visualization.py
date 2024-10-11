@@ -175,3 +175,5 @@ plt.show()
 fig = px.scatter(train_data, x='Age', y='Total Spend', color='Churn', 
                  title='Total Spend vs Age (Colored by Churn)')
 fig.show()
+
+2
