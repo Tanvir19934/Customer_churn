@@ -8,11 +8,12 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 import xgboost as xgb
 import matplotlib.pyplot as plt
 import numpy as np
+import plotly.graph_objects as go
 
 
 # Load the datasets
-train_data = pd.read_csv('/Users/tanvirkaisar/Library/CloudStorage/OneDrive-UniversityofSouthernCalifornia/Semesters/Fall 2023/CSCI 561/customer_churn/Customer_Churn_Dataset/customer_churn_dataset-training-master.csv')
-test_data = pd.read_csv('/Users/tanvirkaisar/Library/CloudStorage/OneDrive-UniversityofSouthernCalifornia/Semesters/Fall 2023/CSCI 561/customer_churn/Customer_Churn_Dataset/customer_churn_dataset-testing-master.csv')
+train_data = pd.read_csv('Customer_Churn_Dataset/customer_churn_dataset-training-master.csv')
+test_data = pd.read_csv('Customer_Churn_Dataset/customer_churn_dataset-testing-master.csv')
 
 
 ########################################################################################################################################
@@ -88,19 +89,21 @@ X_train_clean, y_train_clean = X_train_split[~pd.isnull(y_train_split)], y_train
 ####################################################################
 # Logistic Regression Model
 ####################################################################
+print("Logistic Regression Model Training...")
 logistic_model = LogisticRegression()
 logistic_model.fit(X_train_clean, y_train_clean)
 y_pred_logistic = logistic_model.predict(X_val_split)
 y_pred_logistic_proba = logistic_model.predict_proba(X_val_split)[:, 1]
-
+print("Logistic Regression Model Training Complete")
 ####################################################################
 # Random Forest Model
 ####################################################################
+print("Random Forest Model Training...")
 rf_model = RandomForestClassifier()
 rf_model.fit(X_train_clean, y_train_clean)
 y_pred_rf = rf_model.predict(X_val_split)
 y_pred_rf_proba = rf_model.predict_proba(X_val_split)[:, 1]
-
+print("Random Forest Model Training Complete")
 ########################################################################################################################################
 # XGBOOST Model
 ########################################################################################################################################
@@ -119,8 +122,10 @@ test_par = {
 cv_splitter = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
 
 # Grid Search with cross-validation
+print("XGB Model Training Complete...")
 XGB_gsearch = GridSearchCV(base_model, param_grid=test_par, scoring='roc_auc', cv=cv_splitter, verbose=1, n_jobs=-1, refit=True)
 XGB_gsearch.fit(X_train_clean, y_train_clean)
+print("XGB Model Training Complete")
 
 # Get results and best parameters
 XGB_result_df = pd.DataFrame(XGB_gsearch.cv_results_)
@@ -164,58 +169,6 @@ print("\nXGBoost Performance:")
 print(f"Accuracy: {xgb_eval[0]:.4f}, Precision: {xgb_eval[1]:.4f}, Recall: {xgb_eval[2]:.4f}, F1 Score: {xgb_eval[3]:.4f}, ROC-AUC: {xgb_eval[4]:.4f}")
 
 
-
-import pandas as pd
-from sklearn.preprocessing import LabelEncoder, StandardScaler
-from sklearn.model_selection import train_test_split, StratifiedKFold
-from sklearn.impute import SimpleImputer
-from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, roc_curve
-import xgboost as xgb
-import matplotlib.pyplot as plt
-import numpy as np
-import plotly.graph_objects as go
-
-# Load the datasets
-train_data = pd.read_csv('/Users/tanvirkaisar/Library/CloudStorage/OneDrive-UniversityofSouthernCalifornia/Semesters/Fall 2023/CSCI 561/customer_churn/Customer_Churn_Dataset/customer_churn_dataset-training-master.csv')
-test_data = pd.read_csv('/Users/tanvirkaisar/Library/CloudStorage/OneDrive-UniversityofSouthernCalifornia/Semesters/Fall 2023/CSCI 561/customer_churn/Customer_Churn_Dataset/customer_churn_dataset-testing-master.csv')
-
-# Data preprocessing
-train_data.drop(columns=['CustomerID'], inplace=True)
-test_data.drop(columns=['CustomerID'], inplace=True)
-
-# Handle missing values using SimpleImputer (for numerical columns)
-imputer = SimpleImputer(strategy='mean')
-train_data[['Age', 'Tenure', 'Usage Frequency', 'Support Calls', 'Payment Delay', 'Total Spend', 'Last Interaction']] = imputer.fit_transform(
-    train_data[['Age', 'Tenure', 'Usage Frequency', 'Support Calls', 'Payment Delay', 'Total Spend', 'Last Interaction']])
-test_data[['Age', 'Tenure', 'Usage Frequency', 'Support Calls', 'Payment Delay', 'Total Spend', 'Last Interaction']] = imputer.transform(
-    test_data[['Age', 'Tenure', 'Usage Frequency', 'Support Calls', 'Payment Delay', 'Total Spend', 'Last Interaction']])
-
-# Convert categorical columns to numerical using Label Encoding
-label_encoder = LabelEncoder()
-train_data['Gender'] = label_encoder.fit_transform(train_data['Gender'])
-test_data['Gender'] = label_encoder.transform(test_data['Gender'])
-
-train_data['Subscription Type'] = label_encoder.fit_transform(train_data['Subscription Type'])
-test_data['Subscription Type'] = label_encoder.transform(test_data['Subscription Type'])
-
-train_data['Contract Length'] = label_encoder.fit_transform(train_data['Contract Length'])
-test_data['Contract Length'] = label_encoder.transform(test_data['Contract Length'])
-
-# Separate features and target variable
-X_train = train_data.drop(columns=['Churn'])
-y_train = train_data['Churn']
-X_test = test_data.drop(columns=['Churn'])
-y_test = test_data['Churn']
-
-# Standardize/Scale the numerical features
-scaler = StandardScaler()
-X_train_scaled = scaler.fit_transform(X_train)
-X_test_scaled = scaler.transform(X_test)
-
-# Split the data into training and validation sets
-X_train_split, X_val_split, y_train_split, y_val_split = train_test_split(X_train_scaled, y_train, test_size=0.2, random_state=42)
 
 ########################################################################################################################################
 # XGBOOST Model with Cross-Validated ROC Curve Plot
@@ -294,4 +247,38 @@ RF_feat = pd.DataFrame(data=model.feature_importances_, index=X_feature, columns
 RF_feat.sort_values('importance').plot(kind='barh', title='XGB Feature Importance')
 plt.show()
 
-2
+# Function to save model performance to a text file
+def save_model_performance(logistic_eval, rf_eval, xgb_eval, file_name='model_performance.txt'):
+    with open(file_name, 'w') as f:
+        f.write("Model Performance Summary\n")
+        f.write("=========================\n\n")
+
+        # Logistic Regression performance
+        f.write("Logistic Regression Performance:\n")
+        f.write(f"Accuracy: {logistic_eval[0]:.4f}\n")
+        f.write(f"Precision: {logistic_eval[1]:.4f}\n")
+        f.write(f"Recall: {logistic_eval[2]:.4f}\n")
+        f.write(f"F1 Score: {logistic_eval[3]:.4f}\n")
+        f.write(f"ROC-AUC: {logistic_eval[4]:.4f}\n\n")
+
+        # Random Forest performance
+        f.write("Random Forest Performance:\n")
+        f.write(f"Accuracy: {rf_eval[0]:.4f}\n")
+        f.write(f"Precision: {rf_eval[1]:.4f}\n")
+        f.write(f"Recall: {rf_eval[2]:.4f}\n")
+        f.write(f"F1 Score: {rf_eval[3]:.4f}\n")
+        f.write(f"ROC-AUC: {rf_eval[4]:.4f}\n\n")
+
+        # XGBoost performance
+        f.write("XGBoost Performance:\n")
+        f.write(f"Accuracy: {xgb_eval[0]:.4f}\n")
+        f.write(f"Precision: {xgb_eval[1]:.4f}\n")
+        f.write(f"Recall: {xgb_eval[2]:.4f}\n")
+        f.write(f"F1 Score: {xgb_eval[3]:.4f}\n")
+        f.write(f"ROC-AUC: {xgb_eval[4]:.4f}\n")
+
+
+# Save model performance to a text file
+save_model_performance(logistic_eval, rf_eval, xgb_eval, file_name='model_performance.txt')
+
+

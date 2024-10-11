@@ -1,0 +1,23 @@
+Model Performance Summary
+=========================
+
+Logistic Regression Performance:
+Accuracy: 0.7820
+Precision: 0.8167
+Recall: 0.7822
+F1 Score: 0.7990
+ROC-AUC: 0.8409
+
+Random Forest Performance:
+Accuracy: 0.8994
+Precision: 0.9004
+Recall: 0.9202
+F1 Score: 0.9102
+ROC-AUC: 0.8992
+
+XGBoost Performance:
+Accuracy: 0.8981
+Precision: 0.8989
+Recall: 0.9195
+F1 Score: 0.9091
+ROC-AUC: 0.8970
