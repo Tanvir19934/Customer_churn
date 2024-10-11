@@ -11,6 +11,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
@@ -43,7 +44,7 @@ jobs:
 
       - name: Commit and Push changes
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           git add .
           git commit -m "Add model performance report"
