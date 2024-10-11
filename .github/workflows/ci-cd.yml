@@ -1,6 +1,6 @@
 name: CI/CD for ML
 
-on:[push]
+on: [push]
 
 
 jobs:
