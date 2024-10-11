@@ -27,5 +27,5 @@ jobs:
           python Customer_churn.py
 
           echo "model performance"
-          cat model_metrics_cicd.txt
+          cat model_performance.txt
 
