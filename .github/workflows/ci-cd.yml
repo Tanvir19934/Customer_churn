@@ -40,4 +40,4 @@ jobs:
           git config --global user.email "github-actions@github.com"
           git add report.md
           git commit -m "Add model performance report"
-          git push
+          git push https://$GITHUB_ACTOR:${{ secrets.GH_token }}@github.com/$GITHUB_REPOSITORY
