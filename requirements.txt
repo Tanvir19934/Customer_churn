@@ -20,3 +20,4 @@ tenacity
 threadpoolctl
 tzdata
 xgboost
+kaleido
