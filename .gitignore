@@ -2,3 +2,5 @@ mlenv/
 /config.local
 /tmp
 /cache
+.docx
+Customer_Churn_Dataset/.DS_store
