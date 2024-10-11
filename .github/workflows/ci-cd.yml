@@ -40,4 +40,5 @@ jobs:
           git config --global user.email "github-actions@github.com"
           git add report.md
           git commit -m "Add model performance report"
-          git push https://$GITHUB_ACTOR:${{ secrets.GH_TOKEN }}@github.com/Tanvir19934/Customer_churn
+          git push https://$GITHUB_ACTOR:${{ secrets.GH_TOKEN }}@github.com/Tanvir19934/Customer_churn.git
+          
