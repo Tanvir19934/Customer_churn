@@ -233,8 +233,10 @@ fig.update_layout(
     showlegend=True
 )
 
-# Show the plot
-fig.show()
+# Show and save the plot
+#fig.show()
+fig.write_image("pooled_roc_curve.png")
+
 
 ####################################################################
 # Feature Importance

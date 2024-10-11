@@ -4,3 +4,4 @@ mlenv/
 /cache
 .docx
 Customer_Churn_Dataset/.DS_store
+*.png
